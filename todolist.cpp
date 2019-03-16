@@ -2,6 +2,7 @@
 
 ToDoList::ToDoList(QObject *parent) : QObject(parent)
 {
+    //add some initial sample data
     mItems.append({true, QStringLiteral("Wash the car")});
     mItems.append({false, QStringLiteral("Fix the sink")});
 }
@@ -10,13 +11,21 @@ QVector<ToDoItem> ToDoList::items() const
 {
     return mItems;
 }
-
+//returns whether data was successfully modified or not
 bool ToDoList::setItemAt(int index, const ToDoItem &item)
 {
+    /*
+     * check if the index is valid
+     */
     if(index<0 || index >= mItems.size())
         return false;
 
     const ToDoItem &oldItem = mItems.at(index);
+    /*
+     * checks if new item has identical
+     * values or not to check whether we are changing
+     * the data or not
+     */
     if(item.done == oldItem.done && item.description == oldItem.description){
         return false;
     }
@@ -35,7 +44,7 @@ void ToDoList::appendItem()
 
     emit postItemAppended();
 }
-
+//check on all items and remove the ones that are done
 void ToDoList::removeCompletedItems()
 {
     for (int i=0;i<mItems.size();) {

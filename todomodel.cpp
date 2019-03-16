@@ -12,6 +12,7 @@ int ToDoModel::rowCount(const QModelIndex &parent) const
 {
     // For list models only the root node (an invalid parent) should return the list's size. For all
     // other (valid) parents, rowCount() should return 0 so that it does not become a tree model.
+    // safe gaurd against null pointer accesses
     if (parent.isValid() || !mList)
         return 0;
 
@@ -20,14 +21,18 @@ int ToDoModel::rowCount(const QModelIndex &parent) const
 
 QVariant ToDoModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid()|| !mList)
+    if (!index.isValid() || !mList)
         return QVariant();
 
     const ToDoItem item = mList->items().at(index.row());
 
     switch (role) {
         case DoneRole:
-            return QVariant(false);
+            /*
+             * QVariant class acts like a union
+             * for most common qt data types
+             */
+            return QVariant(item.done);
         case DescriptionRole:
             return QVariant(item.description);
     }
@@ -42,6 +47,7 @@ bool ToDoModel::setData(const QModelIndex &index, const QVariant &value, int rol
     ToDoItem item = mList->items().at(index.row());
     switch (role) {
         case DoneRole:
+            //now we convert back the QVariant by typecasting
             item.done = value.toBool();
             break;
         case DescriptionRole:
@@ -49,7 +55,7 @@ bool ToDoModel::setData(const QModelIndex &index, const QVariant &value, int rol
             break;
     }
 
-
+    //check whether data has changed
     if (mList->setItemAt(index.row(),item)) {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
@@ -83,6 +89,8 @@ void ToDoModel::setList(ToDoList *list)
     beginResetModel();
 
     if(mList){
+        //disconnet from the old list when assigning to
+        // a new list
         mList->disconnect(this);
     }
     mList = list;

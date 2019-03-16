@@ -3,12 +3,15 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 
 import ToDo 1.0
+
+//grid having one column
 ColumnLayout{
     /*
       Frame is used to layout a
       logical group of controls together
       */
     Frame{
+        Layout.fillHeight: true
         /*
           ListView needs the following params
 
@@ -37,9 +40,16 @@ ColumnLayout{
             anchors.fill: parent
 
             /*!
+
               Can be a js array, cpp model
               or a qml model
-              */
+
+              Adding ToDoModel run qmake, this
+              ensures mock(the meta object compiler)
+              any class with a qobject macro added to
+              the project requires qmake to be run
+
+            */
             model: ToDoModel {
                 list: toDoList
             }
@@ -95,7 +105,7 @@ ColumnLayout{
 
         }
     }
-
+    //grid with one row
     RowLayout{
         Button{
             text: qsTr("Add new item")

@@ -11,7 +11,9 @@ class ToDoModel : public QAbstractListModel
 
 public:
     explicit ToDoModel(QObject *parent = nullptr);
-
+    /*
+     * roles are defined here
+     */
     enum {
         DoneRole = Qt::UserRole,
         DescriptionRole
@@ -27,7 +29,12 @@ public:
                  int role = Qt::EditRole) override;
 
     Qt::ItemFlags flags(const QModelIndex& index) const override;
-
+    /*!
+     * virtual means that the function will be overriden
+     * const means if a const class created its members cant
+     * be changed
+     * override means this function is overriding
+     */
     virtual QHash<int, QByteArray> roleNames() const override;
     ToDoList *list() const;
     void setList(ToDoList *list);

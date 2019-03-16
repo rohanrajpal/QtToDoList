@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QVector>
 
+//make a struct for each obj
 struct ToDoItem{
     bool done;
     QString description;
@@ -16,10 +17,15 @@ public:
     explicit ToDoList(QObject *parent = nullptr);
 
     QVector<ToDoItem> items() const;
-
+    //this will allow the model to modify the
+    // todo list data
     bool setItemAt(int index, const ToDoItem &item);
-
+//signals send signals to slots
 signals:
+    //signal functions don't need definitions
+
+    //need to notify before something happens to
+    // data and after that
     void preItemAppend();
     void postItemAppended();
 
